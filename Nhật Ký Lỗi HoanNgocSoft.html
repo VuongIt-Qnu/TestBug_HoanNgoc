@@ -1,0 +1,433 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found]){display:none!important}</style></head><body>
+<title>Nhật Ký Lỗi HoanNgocSoft</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --paper:#F5F7F9; --surface:#FFFFFF; --surface-2:#EFF2F6;
+  --ink:#121821; --ink-2:#3A4553; --muted:#606B7B; --line:#DCE2EA;
+  --accent:#1B4F9C; --accent-soft:#E6EDF8;
+  --crit:#B01F17; --high:#BF5A0E; --med:#8F7400; --low:#3F6F62; --pass:#1C7048;
+  --crit-bg:#FBE9E7; --high-bg:#FCF0E4; --med-bg:#FAF5E0; --low-bg:#E9F2EF; --pass-bg:#E4F1EA;
+  --shadow:0 1px 2px rgba(18,24,33,.05), 0 8px 24px -16px rgba(18,24,33,.28);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#0F1218; --surface:#161B23; --surface-2:#1D232D;
+    --ink:#E9EDF3; --ink-2:#C2CAD6; --muted:#909BAB; --line:#262E3A;
+    --accent:#78A9F0; --accent-soft:#18263C;
+    --crit:#F4867C; --high:#EFA85F; --med:#D8BE55; --low:#79BEAA; --pass:#57C591;
+    --crit-bg:#2B1614; --high-bg:#2B1F12; --med-bg:#272212; --low-bg:#132420; --pass-bg:#12241B;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0F1218; --surface:#161B23; --surface-2:#1D232D;
+  --ink:#E9EDF3; --ink-2:#C2CAD6; --muted:#909BAB; --line:#262E3A;
+  --accent:#78A9F0; --accent-soft:#18263C;
+  --crit:#F4867C; --high:#EFA85F; --med:#D8BE55; --low:#79BEAA; --pass:#57C591;
+  --crit-bg:#2B1614; --high-bg:#2B1F12; --med-bg:#272212; --low-bg:#132420; --pass-bg:#12241B;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box}
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:15px; line-height:1.6; margin:0;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1020px;margin:0 auto;padding:40px 22px 80px}
+h1,h2,h3{font-family:"Bricolage Grotesque","Be Vietnam Pro",system-ui,sans-serif;text-wrap:balance;margin:0}
+code,.mono{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+
+/* masthead */
+.mast{border-top:3px solid var(--ink);padding-top:18px}
+.eyebrow{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600}
+h1{font-size:clamp(30px,5.4vw,46px);font-weight:800;letter-spacing:-.025em;line-height:1.05;margin:10px 0 6px}
+.sub{color:var(--ink-2);max-width:62ch;font-size:16px;margin:0 0 26px}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.meta div{background:var(--surface);padding:11px 14px}
+.meta dt{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:0 0 3px}
+.meta dd{margin:0;font-size:13.5px;font-weight:500;word-break:break-word}
+
+/* scoreboard */
+.score{margin:34px 0 8px;display:grid;grid-template-columns:1fr;gap:14px}
+.bar{display:flex;height:34px;border-radius:6px;overflow:hidden;border:1px solid var(--line)}
+.bar span{display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;font-family:"JetBrains Mono",monospace}
+.legend{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px 5px 8px;font-size:13px;font-weight:600}
+.chip i{width:9px;height:9px;border-radius:2px;display:block}
+.chip b{font-family:"JetBrains Mono",monospace;font-weight:600;color:var(--muted)}
+
+h2{font-size:13px;letter-spacing:.13em;text-transform:uppercase;font-weight:700;color:var(--muted);
+   margin:52px 0 16px;padding-bottom:9px;border-bottom:1px solid var(--line)}
+
+/* bug entries */
+.log{display:flex;flex-direction:column;gap:14px}
+.bug{background:var(--surface);border:1px solid var(--line);border-radius:9px;box-shadow:var(--shadow);
+     border-left:4px solid var(--sv);overflow:hidden}
+.bug>header{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;padding:13px 18px 11px;border-bottom:1px solid var(--line);background:var(--surface-2)}
+.bid{font-family:"JetBrains Mono",monospace;font-size:12.5px;font-weight:600;color:var(--muted)}
+.sev{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;
+     color:var(--sv);background:var(--svbg);border-radius:4px;padding:3px 8px}
+.bug h3{font-size:16.5px;font-weight:700;letter-spacing:-.01em;flex:1 1 320px;line-height:1.35}
+.fields{display:grid;grid-template-columns:132px 1fr;gap:0}
+.fields>dt{grid-column:1;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+           font-weight:600;padding:10px 0 10px 18px;border-top:1px solid var(--line)}
+.fields>dd{grid-column:2;margin:0;padding:10px 18px 10px 0;border-top:1px solid var(--line);font-size:14px;color:var(--ink-2)}
+.fields>dt:first-of-type,.fields>dd:first-of-type{border-top:0}
+.fields ol,.fields ul{margin:0;padding-left:18px}
+.fields li{margin:1px 0}
+.fields code{background:var(--surface-2);border:1px solid var(--line);border-radius:4px;padding:1px 5px;font-size:12.5px;word-break:break-all}
+.fail{color:var(--crit);font-weight:500}
+.want{color:var(--pass);font-weight:500}
+
+/* pass table */
+.passwrap{overflow-x:auto;border:1px solid var(--line);border-radius:9px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:14px}
+th,td{text-align:left;padding:9px 16px;border-top:1px solid var(--line)}
+thead th{border-top:0;font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);background:var(--surface-2)}
+td.ok{width:74px;color:var(--pass);font-weight:700;font-family:"JetBrains Mono",monospace;font-size:12px}
+td.n{width:44px;color:var(--muted);font-family:"JetBrains Mono",monospace;font-size:12.5px}
+
+.note{background:var(--accent-soft);border:1px solid var(--line);border-left:4px solid var(--accent);
+      border-radius:8px;padding:14px 18px;font-size:14px;color:var(--ink-2)}
+.note strong{color:var(--ink)}
+.note ul{margin:8px 0 0;padding-left:18px}
+
+.total{margin-top:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;
+       background:var(--line);border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.total div{background:var(--surface);padding:16px 18px}
+.total span{display:block;font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.total b{font-family:"Bricolage Grotesque",sans-serif;font-size:30px;font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+
+footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:12.5px}
+@media (max-width:600px){.fields{grid-template-columns:1fr}
+ .fields>dt{grid-column:1;padding:12px 18px 0;border-top:1px solid var(--line)}
+ .fields>dd{grid-column:1;padding:2px 18px 12px;border-top:0}
+ .fields>dd:first-of-type{border-top:0}}
+</style>
+
+<div class="wrap">
+<div class="mast">
+  <div class="eyebrow">Báo cáo kiểm thử thủ công · Black-box</div>
+  <h1>Nhật Ký Lỗi HoanNgocSoft</h1>
+  <p class="sub">Kiểm thử điều hướng, biểu mẫu, tìm kiếm, giỏ hàng, thanh toán, giao diện và responsive trên website thương mại điện tử hoanngocsoft.com. Không có thay đổi nào được thực hiện lên mã nguồn hay dữ liệu của website.</p>
+  <dl class="meta" id="meta"></dl>
+</div>
+
+<div class="score">
+  <div class="bar" id="bar"></div>
+  <div class="legend" id="legend"></div>
+</div>
+
+<h2>Danh sách lỗi</h2>
+<div class="log" id="log"></div>
+
+<h2>Chức năng hoạt động đúng (PASS)</h2>
+<div class="passwrap"><table>
+  <thead><tr><th class="n">#</th><th>Hạng mục kiểm thử</th><th class="ok">Kết quả</th></tr></thead>
+  <tbody id="passbody"></tbody>
+</table></div>
+
+<h2>Ngoài phạm vi kiểm thử</h2>
+<div class="note">
+  <strong>Ba hạng mục không được kiểm thử</strong>, để tránh tạo dữ liệu thật trên hệ thống của khách hàng:
+  <ul>
+    <li><strong>Đăng nhập bằng tài khoản thật</strong> — không nhập mật khẩu vào form xác thực. Chỉ kiểm thử validation khi bỏ trống.</li>
+    <li><strong>Đặt hàng thật</strong> — chỉ bấm <em>Place order</em> với form trống để kích hoạt validation, không hoàn tất đơn hàng nào.</li>
+    <li><strong>Thiết bị di động thật</strong> — responsive được mô phỏng bằng khung 390&nbsp;px trong cùng trình duyệt, chưa kiểm tra trên iOS/Android thực tế.</li>
+  </ul>
+</div>
+
+<h2>Tổng kết</h2>
+<div class="total" id="total"></div>
+
+<footer>
+  Kiểm thử ngày 07/09/2026 · Chrome desktop, viewport 1150×674 · WordPress 7.1 + WooCommerce + theme Flatsome ·
+  Số liệu HTTP thu được bằng cách đọc mã trạng thái phản hồi của 181 liên kết nội bộ trên trang chủ.
+</footer>
+</div>
+
+<script>
+const META=[
+ ["Website","hoanngocsoft.com"],
+ ["Ngày kiểm thử","07/09/2026"],
+ ["Vai trò","QA Tester (black-box)"],
+ ["Nền tảng","WordPress + WooCommerce (Flatsome)"],
+ ["Trình duyệt","Chrome desktop 1150×674"],
+ ["Phạm vi","13 nhóm hạng mục theo checklist"]
+];
+const SEV={Critical:["--crit","--crit-bg","#B01F17"],High:["--high","--high-bg","#BF5A0E"],
+           Medium:["--med","--med-bg","#8F7400"],Low:["--low","--low-bg","#3F6F62"]};
+
+const BUGS=[
+{s:"Critical",t:"Toàn bộ cây danh mục trong menu “DANH MỤC SẢN PHẨM” trả về 404",
+ page:"Toàn site (menu dọc ở mọi trang)",fn:"Navigation / Menu danh mục sản phẩm",
+ steps:["Mở trang chủ <code>https://hoanngocsoft.com/</code>.","Bấm vào ô vàng <strong>DANH MỤC SẢN PHẨM</strong> ở thanh menu xanh.","Bấm bất kỳ mục nào: <em>Phần mềm HoanNgocSoft</em>, <em>Máy POS</em>, <em>Máy in Bill</em>, <em>Camera, Thiết Bị Mạng</em>…"],
+ act:"Trang <strong>404 – Oops! That page can’t be found.</strong> Đã kiểm tra <strong>29/181</strong> liên kết nội bộ trên trang chủ trả về HTTP 404, tất cả đều nằm dưới tiền tố <code>/danh-muc-san-pham/</code>. Ví dụ: <code>/danh-muc-san-pham/san-pham/may-pos/</code> → 404, <code>/danh-muc-san-pham/san-pham/may-in-bill/</code> → 404, <code>/danh-muc-san-pham/may-cham-cong/cham-cong-van-tay/</code> → 404.",
+ exp:"Mỗi mục menu mở đúng trang danh mục sản phẩm tương ứng (HTTP 200).",
+ ev:"Quét 181 liên kết nội bộ trên trang chủ bằng request HTTP: 152 × 200, 29 × 404. Xác minh lại bằng 6 request GET riêng lẻ (<code>cache: no-store</code>) — vẫn 404, không phải lỗi tạm thời.",
+ cz:"Menu được cấu hình bằng URL tuyệt đối có tiền tố cũ <code>/danh-muc-san-pham/</code>, trong khi permalink hiện hành của product category là <code>/san-pham/…</code>. Breadcrumb trên trang sản phẩm dùng đúng <code>/san-pham/may-cham-cong/</code>, chứng tỏ menu chưa được cập nhật sau khi đổi permalink base và không có redirect 301."},
+
+{s:"Critical",t:"8 nút CTA “XEM CHI TIẾT” / “TÌM HIỂU THÊM” trên trang chủ dẫn tới 404",
+ page:"Trang chủ",fn:"Banner CTA giải pháp bán hàng / nhân sự / camera / phụ kiện",
+ steps:["Mở trang chủ.","Cuộn tới các khối banner <em>MÁY POS, PHẦN MỀM QUẢN LÝ, NGĂN KÉO THU NGÂN, MÁY QUÉT MÃ VẠCH, MÁY IN MÃ VẠCH, MÁY IN HÓA ĐƠN, CHẤM CÔNG BẰNG VÂN TAY, CHẤM CÔNG BẰNG THẺ TỪ</em>.","Bấm nút <strong>XEM CHI TIẾT</strong> của từng khối (và <strong>TÌM HIỂU THÊM</strong> ở khối camera)."],
+ act:"Cả 8 nút đều dẫn tới trang 404. Cả ảnh banner phía trên nút cũng trỏ tới cùng URL hỏng.",
+ exp:"Mỗi nút mở đúng trang danh mục sản phẩm mà banner đang quảng bá.",
+ ev:"<code>/danh-muc-san-pham/san-pham/may-pos-cam-ung/</code>, <code>…/phan-mem-hoanngocsoft/</code>, <code>…/phu-kien/ngan-keo-thu-ngan/</code>, <code>…/may-quet-may-in/may-in-ma-vach/</code>, <code>…/may-quet-may-in/may-in-hoa-don/</code>, <code>…/may-cham-cong/cham-cong-van-tay/</code>, <code>…/may-cham-cong/cham-cong-the-tu/</code>, <code>…/camera-thiet-bi-mang/camera-quan-sat/</code> — tất cả HTTP 404.",
+ cz:"Cùng nguyên nhân với BUG #1, nhưng URL được nhập tay trong page builder của trang chủ nên phải sửa riêng, không tự khỏi khi sửa menu. Đây là các CTA chính của trang chủ — ảnh hưởng trực tiếp tới tỉ lệ chuyển đổi."},
+
+{s:"High",t:"Nút “TƯ VẤN MIỄN PHÍ” ở slide 3 thiếu tiền tố <code>tel:</code> nên dẫn tới tên miền không tồn tại",
+ page:"Trang chủ — slider hero, slide “GIẢI PHÁP QUẢN LÝ BÁN HÀNG”",fn:"CTA gọi tư vấn",
+ steps:["Mở trang chủ.","Chờ slider chuyển sang slide 3 (hoặc bấm mũi tên phải 2 lần).","Bấm nút <strong>TƯ VẤN MIỄN PHÍ</strong>."],
+ act:"Trình duyệt cố mở <code>http://0899.199.759</code> như một website và báo lỗi phân giải tên miền (<code>ERR_NAME_NOT_RESOLVED</code>). Người dùng bị đưa ra khỏi website thay vì được gọi điện.",
+ exp:"Mở ứng dụng gọi điện tới số 0899.199.759, giống hai nút CTA còn lại.",
+ ev:"Thuộc tính DOM: <code>href=\"http://0899.199.759\"</code>. Trong khi đó hai nút cùng chức năng ở slide 1 và slide 2 dùng đúng <code>href=\"tel:0899.199.759\"</code>.",
+ cz:"Thiếu tiền tố <code>tel:</code> khi nhập link; trình soạn thảo tự thêm <code>http://</code> vào chuỗi số."},
+
+{s:"High",t:"Không có chức năng Đăng ký tài khoản — khách mới không thể tạo tài khoản",
+ page:"<code>/tai-khoan/</code>",fn:"Login / Register",
+ steps:["Mở <code>https://hoanngocsoft.com/tai-khoan/</code>.","Cuộn hết trang."],
+ act:"Trang chỉ có duy nhất khối <strong>LOGIN</strong> (Username, Password, Remember me, Lost your password?). Không có form Register, không có tab/liên kết “Đăng ký”. <code>/dang-ky/</code> và các biến thể cũng không tồn tại.",
+ exp:"Có form đăng ký (hoặc ít nhất một liên kết dẫn tới nơi đăng ký), vì đây là website bán hàng có giỏ hàng và thanh toán.",
+ ev:"Đọc DOM trang <code>/tai-khoan/</code>: chỉ có 1 form <code>woocommerce-form-login</code>, không có <code>woocommerce-form-register</code>.",
+ cz:"Tùy chọn <em>Cho phép khách hàng tạo tài khoản tại trang My account</em> đang tắt trong WooCommerce → Settings → Accounts &amp; Privacy."},
+
+{s:"High",t:"Trang “Liên Hệ” không có form liên hệ",
+ page:"<code>/cong-ty-co-phan-giai-phap-cong-nghe-hoan-ngoc/</code> (menu LIÊN HỆ)",fn:"Form liên hệ / thu thập lead",
+ steps:["Bấm <strong>LIÊN HỆ</strong> trên menu chính.","Cuộn hết trang."],
+ act:"Trang chỉ hiển thị địa chỉ, điện thoại, email, fanpage và một bản đồ Google. Không có bất kỳ ô nhập nào ngoài ô tìm kiếm của header. Không thể kiểm thử các trường hợp bỏ trống / dữ liệu hợp lệ / không hợp lệ / quá dài vì không có form.",
+ exp:"Có form liên hệ (Họ tên, Điện thoại, Email, Nội dung) với validation và thông báo gửi thành công.",
+ ev:"Đọc toàn bộ <code>document.forms</code> của trang: chỉ có 2 form <code>searchform</code> và 1 form login ẩn — không có form liên hệ.",
+ cz:"Trang được xây bằng text tĩnh, chưa gắn shortcode Contact Form 7 / WPForms. Toàn bộ nhu cầu liên hệ đang dồn vào số điện thoại, làm mất lead ngoài giờ hành chính (07:30–17:30)."},
+
+{s:"Medium",t:"Menu có hai mục “Download Driver”, một trong hai dẫn tới 404",
+ page:"Menu <em>HỖ TRỢ PHẦN MỀM</em>",fn:"Dropdown menu hỗ trợ",
+ steps:["Rê chuột vào <strong>HỖ TRỢ PHẦN MỀM</strong>.","Bấm <strong>Download Driver</strong>."],
+ act:"Trong DOM tồn tại hai thẻ &lt;a&gt; cùng nhãn “Download Driver”: một trỏ <code>/ho-tro-phan-mem-2/download-driver/</code> (HTTP 200) và một trỏ <code>/ho-tro-phan-mem-2/tool-ho-tro/download-driver/</code> (HTTP 404). Tùy vị trí người dùng bấm sẽ ra trang 404.",
+ exp:"Chỉ có một mục “Download Driver” và nó luôn mở trang tải driver.",
+ ev:"So sánh thuộc tính href của 2 phần tử; kiểm tra HTTP: 200 vs 404.",
+ cz:"Một mục menu kiểu <em>custom link</em> bị nhập URL tương đối nên bị nối thêm đường dẫn cha <code>/tool-ho-tro/</code>; mục còn lại là <em>post_type</em> nên đúng."},
+
+{s:"Medium",t:"Header dính (sticky) trong suốt — nội dung trang chạy xuyên qua logo và ô tìm kiếm",
+ page:"Toàn site",fn:"Sticky header",
+ steps:["Mở bất kỳ trang nào (trang chủ, sản phẩm, giỏ hàng, thanh toán).","Cuộn xuống khoảng 500–1000 px."],
+ act:"Hàng trên của header (logo, ô tìm kiếm, hotline, nút CART) mất nền: chữ và ảnh của nội dung phía sau hiện xuyên qua, chồng lên logo và ô tìm kiếm, gây khó đọc. Lỗi lặp lại cả trên bố cục mobile 390 px.",
+ exp:"Header dính có nền đục hoàn toàn, tách bạch khỏi nội dung khi cuộn.",
+ ev:"Ảnh chụp khi cuộn ở trang chủ và trang thanh toán: đọc rõ dòng “Thiết kế hiện đại và tinh tế…” và các thông báo lỗi checkout nằm ngay sau ô tìm kiếm.",
+ cz:"Class sticky của theme chỉ đặt nền cho hàng menu (nav xanh) mà không đặt <code>background</code> cho hàng header trên; hoặc bị một rule <code>background: transparent</code> ghi đè."},
+
+{s:"Medium",t:"Dropdown gợi ý tìm kiếm và mega menu có nền trong suốt",
+ page:"Toàn site",fn:"Live search / Mega menu",
+ steps:["Gõ <code>máy pos</code> vào ô tìm kiếm ở header và chờ danh sách gợi ý.","Hoặc rê chuột vào <strong>HƯỚNG DẪN SỬ DỤNG PHẦN MỀM</strong>."],
+ act:"Nền của cả hai lớp nổi đều bán trong suốt: chữ của thanh menu xanh và của banner hero hiện xuyên qua tên sản phẩm và tên mục menu, làm giảm mạnh độ tương phản.",
+ exp:"Lớp nổi có nền đục và bóng đổ, không lẫn với nội dung bên dưới.",
+ ev:"Ảnh phóng to vùng dropdown: đọc được chữ “DANH MỤC SẢN PHẨM”, “HỖ TRỢ PHẦN MỀM” nằm sau các dòng kết quả tìm kiếm.",
+ cz:"Cùng gốc với BUG #7 — biến màu nền của lớp nổi trong theme không được định nghĩa hoặc bị ghi đè bằng giá trị trong suốt."},
+
+{s:"Medium",t:"Nút “QUICK VIEW” không mở modal mà điều hướng sang trang sản phẩm",
+ page:"Trang chủ, trang danh mục",fn:"Quick view modal",
+ steps:["Mở trang chủ, cuộn tới lưới sản phẩm.","Rê chuột lên một sản phẩm rồi bấm <strong>QUICK VIEW</strong>."],
+ act:"Trình duyệt rời trang chủ và tải trang chi tiết sản phẩm (<code>/may-in-antech-rp58-au/</code>). Không có modal nào được mở.",
+ exp:"Mở popup xem nhanh ngay trên trang hiện tại, có ảnh, giá và nút thêm vào giỏ; đóng lại là quay về đúng vị trí cũ.",
+ ev:"Sau khi bấm: <code>location.pathname = \"/may-in-antech-rp58-au/\"</code> và không tồn tại phần tử modal nào trong DOM.",
+ cz:"Script quick-view của theme không nạp hoặc lỗi nên thẻ &lt;a&gt; rơi về hành vi mặc định. Nút vẫn hiển thị nhãn “QUICK VIEW” khiến người dùng bị mất ngữ cảnh duyệt sản phẩm."},
+
+{s:"Medium",t:"Slider hero bị lệch, để trống một dải trắng 313 px bên trái",
+ page:"Trang chủ",fn:"Banner slider",
+ steps:["Mở trang chủ ở màn hình rộng ≥ 1150 px.","Quan sát khu vực banner ngay dưới thanh menu."],
+ act:"Các slide chỉ rộng 780 px và bị đẩy sang phải: chiếm từ x=313 đến x=1093 trong khung 1135 px, chừa 313 px trắng bên trái và 42 px bên phải. Trang chủ trông như thiếu mất cột sidebar.",
+ exp:"Slider chiếm trọn chiều rộng vùng nội dung, hoặc dải trống bên trái chứa đúng danh mục sản phẩm như thiết kế.",
+ ev:"Đo <code>getBoundingClientRect()</code> của phần tử <code>.banner</code>: <code>left 313 / right 1093 / width 780</code>, trong khi <code>documentElement.clientWidth = 1135</code>.",
+ cz:"Bố cục dự kiến có cột danh mục dọc luôn mở bên trái nhưng cột này không được render trên trang chủ, còn slider vẫn giữ chiều rộng và vị trí của bố cục 2 cột."},
+
+{s:"Medium",t:"Widget hotline nổi che mất nội dung ở góc dưới bên trái",
+ page:"Toàn site",fn:"Nút gọi nhanh cố định",
+ steps:["Mở một trang sản phẩm bất kỳ, ví dụ <code>/may-in-antech-rp58-au/</code>.","Chuyển sang tab <strong>REVIEWS</strong> và cuộn tới mục <em>Your rating</em>.","Hoặc cuộn xuống footer ở bất kỳ trang nào."],
+ act:"Nút tròn <code>02566265959</code> luôn nằm đè lên nội dung: che hoàn toàn lựa chọn <strong>1 sao</strong> của thang đánh giá (người dùng không thể chấm 1 sao), che mã QR Zalo và một phần địa chỉ ở footer, che dòng caption trên ảnh sản phẩm.",
+ exp:"Widget nổi không che phần tử tương tác nào; nội dung được đệm thêm khoảng trống tương ứng.",
+ ev:"Ảnh phóng to vùng <em>Your rating</em>: chỉ thấy các nhóm 2–3–4–5 sao, nhóm 1 sao nằm dưới nút hotline. Ảnh footer: nút che mã QR.",
+ cz:"Widget dùng <code>position: fixed</code> với <code>z-index</code> cao nhưng trang không có <code>padding-bottom</code> bù trừ, và widget không tự ẩn khi cuộn tới footer."},
+
+{s:"Medium",t:"Giao diện lẫn lộn tiếng Anh và tiếng Việt trên toàn bộ luồng mua hàng",
+ page:"Trang sản phẩm, giỏ hàng, thanh toán, tài khoản, tìm kiếm, trang 404",fn:"Bản địa hoá (i18n)",
+ steps:["Đi qua luồng: trang sản phẩm → giỏ hàng → thanh toán → tài khoản.","Đọc nhãn nút, tiêu đề cột và thông báo hệ thống."],
+ act:"Tiêu đề trang là tiếng Việt nhưng gần như toàn bộ chuỗi của WooCommerce là tiếng Anh: <em>ADD TO CART, DESCRIPTION, REVIEWS, Categories, PRODUCT / PRICE / QUANTITY / SUBTOTAL, CART TOTALS, PROCEED TO CHECKOUT, UPDATE CART, CONTINUE SHOPPING, Coupon code, Apply coupon, BILLING DETAILS, Place order, Your cart is currently empty., Cart updated., “…” have been added to your cart., No products were found matching your selection., Error: Username is required., Billing Phone is a required field., Oops! That page can’t be found.</em>",
+ exp:"Toàn bộ giao diện hiển thị tiếng Việt nhất quán cho khách hàng Việt Nam.",
+ ev:"Ảnh chụp 6 trang khác nhau trong luồng mua hàng; toàn bộ nhãn thao tác đều tiếng Anh.",
+ cz:"Site language không đặt là <code>vi</code>, hoặc gói dịch WooCommerce/Flatsome chưa được tải về (<code>wp-content/languages/</code> thiếu file .mo)."},
+
+{s:"Medium",t:"Tìm kiếm rỗng vẫn được gửi đi và trả về toàn bộ 552 sản phẩm",
+ page:"Toàn site — ô tìm kiếm header",fn:"Search",
+ steps:["Đặt con trỏ vào ô <em>Bạn đang tìm gì ?</em> và để trống.","Bấm nút kính lúp."],
+ act:"Trang chuyển sang kết quả tìm kiếm với tiêu đề <code>Search results: “”</code> và <em>Showing 1–9 of 552 results</em>. Thẻ <code>&lt;title&gt;</code> của trang bắt đầu bằng dấu gạch đứng rỗng: <code>| Công Ty Cổ Phần Giải Pháp Công Nghệ Hoàn Ngọc</code>.",
+ exp:"Không gửi form khi ô tìm kiếm trống, hoặc hiển thị thông báo “Vui lòng nhập từ khoá”.",
+ ev:"Sau khi bấm: <code>location.search</code> có tham số nhưng từ khoá rỗng; tiêu đề trang bị khuyết phần đầu.",
+ cz:"Form search không có thuộc tính <code>required</code> và không có kiểm tra phía client trước khi submit."},
+
+{s:"Medium",t:"Từ khoá tìm kiếm quá dài làm vỡ bố cục, trang trượt ngang gấp 3 lần",
+ page:"Trang kết quả tìm kiếm",fn:"Search — dữ liệu quá dài",
+ steps:["Nhập một chuỗi 250 ký tự liền không dấu cách vào ô tìm kiếm.","Gửi tìm kiếm và quan sát tiêu đề cùng breadcrumb."],
+ act:"Tiêu đề <code>Search results: “aaaa…”</code> và breadcrumb không ngắt dòng, kéo dài ra ngoài khung: <code>scrollWidth = 3537 px</code> so với <code>clientWidth = 1135 px</code>. Toàn trang trượt ngang, footer và nội dung bị đẩy lệch. Với chuỗi 3000 ký tự, máy chủ vẫn trả HTTP 200 (không lỗi 500).",
+ exp:"Từ khoá dài được ngắt dòng hoặc cắt bớt kèm dấu “…”; trang không bao giờ trượt ngang.",
+ ev:"Đo <code>document.documentElement.scrollWidth</code> trước (1135) và sau (3537) khi tìm kiếm chuỗi dài.",
+ cz:"Tiêu đề và breadcrumb thiếu <code>overflow-wrap: anywhere</code> / <code>text-overflow: ellipsis</code>, và từ khoá không bị giới hạn độ dài."},
+
+{s:"Medium",t:"Thông tin doanh nghiệp mâu thuẫn giữa các trang",
+ page:"Trang chủ, footer, trang Liên Hệ, thẻ title",fn:"Nội dung / thông tin pháp lý",
+ steps:["So sánh tên công ty ở thẻ title trang chủ và title trang sản phẩm.","So sánh địa chỉ và hotline ở footer với trang Liên Hệ."],
+ act:"<ul><li>Tên công ty: trang chủ &amp; footer ghi <em>Công Ty TNHH Hoàn Ngọc Group</em>, nhưng thẻ title của mọi trang con ghi <em>Công Ty Cổ Phần Giải Pháp Công Nghệ Hoàn Ngọc</em> — hai loại hình doanh nghiệp khác nhau.</li><li>Địa chỉ: footer ghi <em>Lô 16, Khu Đơ 01, QL1D, Phường Quy Nhơn Nam, Tỉnh Gia Lai</em>; trang Liên Hệ ghi <em>Lô 16 đường A2, Khu dân cư mới QL1D Tây Sơn, P. Quang Trung, TP. Quy Nhơn, Tỉnh Bình Định</em>.</li><li>Số điện thoại: header <em>0256.626.5959</em>, nút nổi <em>02566265959</em>, CTA hero <em>0899.199.759</em>, footer &amp; trang Liên Hệ <em>0935.787.757</em> — bốn số khác nhau, không có chú thích số nào dùng cho việc gì.</li></ul>",
+ exp:"Tên pháp nhân, địa chỉ và đầu số hotline thống nhất trên mọi trang; nếu có nhiều số thì ghi rõ vai trò từng số.",
+ ev:"Đối chiếu thẻ <code>&lt;title&gt;</code>, khối footer và nội dung trang Liên Hệ.",
+ cz:"Nội dung được nhập rời rạc ở nhiều nơi (tuỳ chọn theme, widget footer, trang tĩnh) và chưa cập nhật đồng bộ sau khi công ty đổi tên/địa chỉ."},
+
+{s:"Medium",t:"Nhiều sản phẩm không có giá và không có cách nào để mua hoặc hỏi giá",
+ page:"Trang chủ, trang sản phẩm",fn:"Hiển thị giá / Thêm vào giỏ",
+ steps:["Mở trang chủ, xem lưới <em>MÁY IN BILL</em>.","Bấm vào <em>Máy in Antech RP58 AU</em>."],
+ act:"Trên lưới, phần lớn sản phẩm máy in không hiển thị giá. Vào trang chi tiết cũng không có giá, không có ô số lượng, không có nút <em>Add to cart</em> và cũng không có nút “Liên hệ báo giá” — người dùng đi vào ngõ cụt.",
+ exp:"Hiển thị giá, hoặc nếu là hàng liên hệ thì hiển thị nhãn “Liên hệ” kèm nút gọi/gửi yêu cầu báo giá.",
+ ev:"Đọc DOM trang <code>/may-in-antech-rp58-au/</code>: không tìm thấy phần tử <code>.price</code>, không có <code>form.cart</code>.",
+ cz:"Sản phẩm được tạo mà bỏ trống trường giá; WooCommerce ẩn nút mua khi không có giá, nhưng theme không có phương án thay thế."},
+
+{s:"Low",t:"Trang danh mục chính dùng URL <code>/auto-draft/</code>",
+ page:"<code>https://hoanngocsoft.com/auto-draft/</code>",fn:"Cấu trúc URL / SEO",
+ steps:["Mở menu <strong>DANH MỤC SẢN PHẨM</strong>.","Bấm dòng tiêu đề <em>Danh Mục Sản Phẩm</em> ở đầu danh sách."],
+ act:"Mở trang “Danh Mục Sản Phẩm” hiển thị bình thường (HTTP 200) nhưng đường dẫn là <code>/auto-draft/</code> — tên slug mặc định của bản nháp WordPress.",
+ exp:"URL có ý nghĩa, ví dụ <code>/danh-muc-san-pham/</code>.",
+ ev:"Thanh địa chỉ và thuộc tính href của mục menu.",
+ cz:"Trang được tạo từ bản nháp tự động và không đổi slug trước khi xuất bản."},
+
+{s:"Low",t:"Giỏ hàng trống không có lối quay lại cửa hàng",
+ page:"<code>/gio-hang/</code>",fn:"Trạng thái rỗng của giỏ hàng",
+ steps:["Thêm một sản phẩm vào giỏ.","Bấm dấu × để xoá sản phẩm."],
+ act:"Hiển thị “<em>Your cart is currently empty.</em>” và không có nút nào để tiếp tục mua hàng; người dùng phải tự dùng menu.",
+ exp:"Hiển thị nút <em>Quay lại cửa hàng</em> như mặc định của WooCommerce.",
+ ev:"Ảnh chụp trang giỏ hàng sau khi xoá sản phẩm.",
+ cz:"Template giỏ hàng của theme đã bỏ nút <code>return-to-shop</code>."},
+
+{s:"Low",t:"Thông báo lỗi đăng nhập hiển thị lệch ra ngoài khung nội dung",
+ page:"<code>/tai-khoan/</code>",fn:"Hiển thị lỗi form",
+ steps:["Để trống cả hai ô và bấm <strong>LOG IN</strong>."],
+ act:"Dòng <em>Error: Username is required.</em> hiện ở sát mép trái, phía trên cả tiêu đề trang, không có khung nền hay biểu tượng cảnh báo — dễ bị bỏ qua và trông như lỗi vỡ trang.",
+ exp:"Thông báo lỗi nằm trong khung nội dung, ngay trên form, có nền/viền màu cảnh báo.",
+ ev:"Ảnh chụp sau khi submit form rỗng.",
+ cz:"Vị trí hook <code>woocommerce_output_all_notices</code> nằm ngoài container của theme; thiếu CSS cho <code>.woocommerce-error</code>."},
+
+{s:"Low",t:"Trường Điện thoại ở trang thanh toán chấp nhận chữ và ký tự đặc biệt",
+ page:"<code>/thanh-toan/</code>",fn:"Validation form thanh toán",
+ steps:["Thêm sản phẩm vào giỏ rồi mở trang thanh toán.","Nhập <code>abcdxyz!@#$</code> vào ô <em>Phone</em> và chuyển sang trường khác."],
+ act:"Trường không báo lỗi, không đổi viền đỏ, giá trị được giữ nguyên. Ngoài ra khi nhập email sai định dạng (<code>abc-invalid-email</code>) trường có viền đỏ nhưng không kèm dòng chữ giải thích, trong khi các trường bắt buộc khác đều có dòng “… is a required field.”",
+ exp:"Chỉ chấp nhận số, dấu cách, +, -, ( ); báo lỗi rõ ràng khi sai định dạng, và mỗi trường lỗi đều có thông báo bằng chữ.",
+ ev:"Ảnh chụp trường Phone sau khi nhập chuỗi không hợp lệ; không có phần tử thông báo lỗi đi kèm.",
+ cz:"WooCommerce chỉ kiểm tra “không rỗng” cho <code>billing_phone</code>; chưa bật kiểm tra định dạng số điện thoại Việt Nam."},
+
+{s:"Low",t:"Thẻ viewport đặt <code>maximum-scale=1</code> — chặn phóng to trên điện thoại",
+ page:"Toàn site",fn:"Khả năng tiếp cận (accessibility)",
+ steps:["Mở website trên điện thoại.","Thử phóng to bằng hai ngón tay."],
+ act:"<code>&lt;meta name=\"viewport\" content=\"width=device-width, initial-scale=1, maximum-scale=1\"&gt;</code> ngăn người dùng phóng to nội dung.",
+ exp:"Bỏ <code>maximum-scale=1</code> để người dùng có thể phóng to (yêu cầu WCAG 1.4.4).",
+ ev:"Đọc thẻ meta viewport của trang.",
+ cz:"Cấu hình mặc định của theme, ảnh hưởng người dùng lớn tuổi hoặc thị lực kém — nhóm khách hàng đáng kể của thiết bị bán hàng."},
+
+{s:"Low",t:"103/144 ảnh trên trang chủ thiếu thuộc tính alt",
+ page:"Trang chủ",fn:"SEO / Accessibility",
+ steps:["Mở trang chủ.","Kiểm tra thuộc tính <code>alt</code> của toàn bộ thẻ &lt;img&gt;."],
+ act:"144 ảnh, trong đó 103 ảnh không có <code>alt</code> — gồm cả ảnh sản phẩm và ảnh banner CTA.",
+ exp:"Mọi ảnh có nội dung đều có <code>alt</code> mô tả; ảnh trang trí để <code>alt=\"\"</code>.",
+ ev:"Đếm trực tiếp trên DOM: <code>144 &lt;img&gt;</code>, <code>103</code> thiếu alt. Điểm tích cực: không có ảnh nào hỏng (0 ảnh <code>naturalWidth = 0</code>).",
+ cz:"Ảnh được tải lên hàng loạt mà không nhập alt trong Media Library."},
+
+{s:"Low",t:"Nội dung trùng lặp: hai URL cho cùng một trang Dự án và Tin tức",
+ page:"<code>/du-an/</code> vs <code>/du-an-da-thuc-hien/</code>, <code>/tin-tuc/</code> vs <code>/category/tin-tuc/</code>",fn:"Điều hướng / SEO",
+ steps:["Bấm <strong>DỰ ÁN</strong> trên menu chính.","Bấm <strong>Xem Thêm</strong> ở khối “DỰ ÁN ĐÃ THỰC HIỆN” trên trang chủ."],
+ act:"Hai nút cùng dẫn tới danh sách dự án nhưng khác URL: menu trỏ <code>/du-an-da-thuc-hien/</code>, còn nút trên trang chủ trỏ <code>/du-an/</code>. Cả hai đều trả HTTP 200. Tương tự với <code>/tin-tuc/</code> và <code>/category/tin-tuc/</code>.",
+ exp:"Một trang chỉ có một URL chuẩn; các URL còn lại redirect 301 hoặc khai báo canonical.",
+ ev:"Kiểm tra HTTP: cả 4 URL đều trả 200.",
+ cz:"Trang tĩnh và trang lưu trữ chuyên mục cùng tồn tại, menu và trang chủ trỏ về hai nơi khác nhau."},
+
+{s:"Low",t:"Máy chủ trả HTTP 503 ngắt quãng khi có nhiều request đồng thời",
+ page:"Toàn site",fn:"Ổn định máy chủ",
+ steps:["Gửi 181 request tới các trang nội bộ với 6 kết nối song song."],
+ act:"Trong lần quét đầu tiên, 3 URL trả về <strong>503 Service Unavailable</strong> (ví dụ <code>/san-pham/may-in-bill/</code>, <code>/san-pham/phan-mem-hoanngocsoft/phan-mem-khach-san/</code>). Khi truy cập lại từng URL đó thì trả 200 bình thường.",
+ exp:"Máy chủ trả 200 ổn định với tải nhẹ như trình duyệt thông thường hoặc bot của Google.",
+ ev:"Kiểm chứng thêm: 24 request tuần tự (4 luồng, <code>cache: no-store</code>) tới <code>/san-pham/may-pos/</code> đều trả 200 → <strong>không tái hiện được ổn định</strong>. Ghi nhận ở mức Low để đội vận hành theo dõi log.",
+ cz:"Giới hạn tài nguyên PHP-FPM/hosting hoặc rate-limit của tường lửa khi có nhiều kết nối cùng lúc. Nếu xảy ra với Googlebot sẽ ảnh hưởng chỉ mục tìm kiếm."},
+
+{s:"Low",t:"Lộ phiên bản nền tảng qua thẻ meta generator",
+ page:"Toàn site",fn:"Bảo mật — lộ thông tin",
+ steps:["Xem mã nguồn trang, tìm thẻ <code>meta[name=generator]</code>."],
+ act:"Trang công khai phiên bản chính xác: <code>&lt;meta name=\"generator\" content=\"WordPress 7.1\"&gt;</code>.",
+ exp:"Ẩn thẻ generator để không cung cấp thông tin dò quét lỗ hổng theo phiên bản.",
+ ev:"Đọc trực tiếp thẻ meta trong DOM.",
+ cz:"Hook <code>wp_generator</code> mặc định chưa bị gỡ. Mức độ thấp vì đây là thông tin phổ biến, nhưng nên tắt cùng lúc với việc rà soát phiên bản plugin."},
+
+{s:"Low",t:"Liên kết “07:30 - 17h30” không có href và tooltip email hiện sai vị trí lúc tải trang",
+ page:"Thanh trên cùng (top bar), toàn site",fn:"Top bar / tooltip",
+ steps:["Tải lại trang chủ và quan sát thanh trên cùng trong 1–2 giây đầu.","Bấm vào dòng <em>07:30 - 17h30</em>."],
+ act:"Ngay khi tải trang, tooltip <code>hoanngocsoft@gmail.com</code> hiện lơ lửng giữa header dù chuột không rê vào đâu. Ngoài ra <em>07:30 - 17h30</em> được đánh dấu là thẻ &lt;a&gt; nhưng không có <code>href</code> — bấm vào không có phản hồi, con trỏ vẫn đổi thành bàn tay.",
+ exp:"Tooltip chỉ hiện khi rê chuột đúng phần tử; phần tử không phải liên kết thì không dùng thẻ &lt;a&gt;.",
+ ev:"Ảnh chụp ngay sau khi tải trang chủ cho thấy tooltip nổi lệch dưới logo; kiểm tra DOM: <code>&lt;a&gt;</code> không có thuộc tính href.",
+ cz:"Plugin tooltip (tooltipster) khởi tạo trước khi CSS định vị xong; markup dùng thẻ &lt;a&gt; cho nội dung không phải liên kết."}
+];
+
+const PASSES=[
+ "Trang chủ tải thành công, không phát sinh lỗi JavaScript nào từ website (các lỗi console đều đến từ tiện ích mở rộng của trình duyệt)",
+ "Menu ngang (Tin Tức, Dự Án, Liên Hệ, Hướng Dẫn Sử Dụng Phần Mềm) điều hướng đúng trang",
+ "Mega menu và menu dọc mở/đóng đúng khi rê chuột và khi bấm",
+ "Breadcrumb trên trang sản phẩm trỏ đúng danh mục (HTTP 200)",
+ "Live search gợi ý đúng sản phẩm theo từ khoá “máy pos”",
+ "Trang kết quả tìm kiếm không có kết quả hiển thị thông báo phù hợp",
+ "Tìm kiếm chống XSS tốt: chuỗi <code>&lt;img src=x onerror=…&gt;</code> được escape, script không chạy",
+ "Tìm kiếm chuỗi 3000 ký tự: máy chủ trả HTTP 200, không lỗi 500",
+ "Thêm vào giỏ hàng với số lượng 2: đúng số lượng, tổng tiền 5.040.000 ₫, badge giỏ hàng cập nhật",
+ "Chặn số lượng âm: nhập −5 bị validation chặn trước khi gửi",
+ "Cập nhật giỏ hàng từ 2 lên 3: tổng tiền đúng 7.560.000 ₫ kèm thông báo xác nhận",
+ "Xoá sản phẩm khỏi giỏ hàng hoạt động, có kèm liên kết Undo để hoàn tác",
+ "Mã giảm giá sai báo lỗi đúng: “Coupon … cannot be applied because it does not exist.”",
+ "Thanh toán với form trống: liệt kê đầy đủ 6 trường bắt buộc còn thiếu và yêu cầu đồng ý điều khoản",
+ "Email sai định dạng ở trang thanh toán được đánh dấu trường lỗi",
+ "Đăng nhập với form trống: báo lỗi “Username is required.”",
+ "Tab DESCRIPTION / REVIEWS trên trang sản phẩm chuyển nội dung đúng",
+ "Form đánh giá sản phẩm có validation bắt buộc (số sao, nội dung, tên, email)",
+ "Trang 404 hiển thị đúng thiết kế kèm ô tìm kiếm để người dùng đi tiếp",
+ "Responsive ở khung 390 px: bố cục chuyển sang mobile, có menu hamburger, không tràn ngang (scrollWidth = clientWidth)",
+ "152/181 liên kết nội bộ trên trang chủ trả HTTP 200",
+ "Không có ảnh hỏng: 0/144 ảnh lỗi tải"
+];
+
+/* render */
+document.getElementById("meta").innerHTML=META.map(m=>`<div><dt>${m[0]}</dt><dd>${m[1]}</dd></div>`).join("");
+
+const order=["Critical","High","Medium","Low"];
+const count={};order.forEach(k=>count[k]=BUGS.filter(b=>b.s===k).length);
+const total=BUGS.length;
+document.getElementById("bar").innerHTML=order.map(k=>
+ `<span style="flex:${count[k]};background:var(${SEV[k][0]})">${count[k]}</span>`).join("");
+document.getElementById("legend").innerHTML=order.map(k=>
+ `<span class="chip"><i style="background:var(${SEV[k][0]})"></i>${k} <b>${count[k]}</b></span>`).join("")
+ +`<span class="chip"><i style="background:var(--pass)"></i>PASS <b>${PASSES.length}</b></span>`;
+
+document.getElementById("log").innerHTML=BUGS.map((b,i)=>`
+<article class="bug" style="--sv:var(${SEV[b.s][0]});--svbg:var(${SEV[b.s][1]})">
+ <header><span class="bid">BUG #${i+1}</span><span class="sev">${b.s}</span><h3>${b.t}</h3></header>
+ <dl class="fields">
+  <dt>Trang</dt><dd>${b.page}</dd>
+  <dt>Chức năng</dt><dd>${b.fn}</dd>
+  <dt>Bước tái hiện</dt><dd><ol>${b.steps.map(s=>`<li>${s}</li>`).join("")}</ol></dd>
+  <dt>Kết quả thực tế</dt><dd class="fail">${b.act}</dd>
+  <dt>Kết quả mong đợi</dt><dd class="want">${b.exp}</dd>
+  <dt>Bằng chứng</dt><dd>${b.ev}</dd>
+  <dt>Đề xuất nguyên nhân</dt><dd>${b.cz}</dd>
+ </dl>
+</article>`).join("");
+
+document.getElementById("passbody").innerHTML=PASSES.map((p,i)=>
+ `<tr><td class="n">${String(i+1).padStart(2,"0")}</td><td>${p}</td><td class="ok">PASS</td></tr>`).join("");
+
+document.getElementById("total").innerHTML=
+ [["PASS",PASSES.length,"--pass"],["FAIL",total,"--crit"],["Critical",count.Critical,"--crit"],
+  ["High",count.High,"--high"],["Medium",count.Medium,"--med"],["Low",count.Low,"--low"]]
+ .map(t=>`<div><span>${t[0]}</span><b style="color:var(${t[2]})">${t[1]}</b></div>`).join("");
+</script>
+
+</body></html>
